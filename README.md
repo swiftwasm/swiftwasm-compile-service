@@ -14,7 +14,7 @@ node index.js
 Then run
 
 ```
-curl -d "{\"src\": \"print(1234)"}" -H "Content-Type: application/json" http://localhost:3000/v1/compile
+curl -d "{\"src\": \"print(1234)\"}" -H "Content-Type: application/json" http://localhost:3000/v1/compile
 ```
 
 # License
