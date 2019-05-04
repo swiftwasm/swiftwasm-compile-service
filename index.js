@@ -17,6 +17,7 @@ const port = 3000;
 
 async function compileOneFile(appPath, folder, sourcePath) {
 	const objectPath = path.join(folder, "source.o");
+	const outputPath = path.join(folder, "program.wasm");
 	var output = "";
 	try {
 		const compileOutput = await execFile(path.join(appPath, "compiler/opt/swiftwasm-sdk/bin/swiftc"), [
@@ -31,12 +32,48 @@ async function compileOneFile(appPath, folder, sourcePath) {
 		output = e.stderr;
 		return {success: false, output: output};
 	}
+	const sysRoot = path.join(appPath, "compiler/wasi-sdk/opt/wasi-sdk/share/sysroot");
+	const swiftPath = path.join(appPath, "compiler/opt/swiftwasm-sdk");
 	try {
 		const linkOutput = await execFile(path.join(appPath, "compiler/wasi-sdk/opt/wasi-sdk/bin/wasm-ld"), [
+			"--error-limit=0", "-o", outputPath,
+			// start objects
+			path.join(sysRoot, "lib/wasm32-wasi/crt1.o"),
+			path.join(appPath, "extra_objs/swift_start.o"),
+			path.join(swiftPath, "lib/swift_static/wasm/wasm32/swiftrt.o"),
+			// newly compiled object
+			objectPath,
+			// linking static libraries
+			"-L" + path.join(swiftPath, "lib/swift_static/wasm"),
+			"-L" + path.join(sysRoot, "lib/wasm32-wasi"),
+			"-L" + path.join(appPath, "compiler/icu_out/lib"),
+			"-lswiftCore",
+			"-lc", "-lc++", "-lc++abi", "-lswiftImageInspectionShared",
+			"-licuuc", "-licudata",
+			path.join(appPath, "compiler/wasi-sdk/opt/wasi-sdk/lib/clang/8.0.0/lib/wasi/libclang_rt.builtins-wasm32.a"),
+			path.join(appPath, "extra_objs/fakepthread.o"),
+			path.join(appPath, "extra_objs/fakelocaltime.o"),
+			// end object
+			path.join(appPath, "extra_objs/swift_end.o"),
+			// keep all metadata
+			"--no-gc-sections",
+			// sometimes threads hangs
+			"--no-threads"
 			], {
 			"timeout": 2000
 			});
 		output += linkOutput.stderr;
+	} catch (e) {
+		output += e.stderr;
+		return {success: false, output: output};
+	}
+	try {
+		const stripOutput = await execFile(path.join(appPath, "compiler/wabt/wasm-strip"), [
+			objectPath
+			], {
+			"timeout": 2000
+			});
+		output += stripOutput.stderr;
 	} catch (e) {
 		output += e.stderr;
 		return {success: false, output: output};
