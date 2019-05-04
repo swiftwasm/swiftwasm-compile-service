@@ -1,0 +1,22 @@
+{
+  "name": "swiftwasm-compile-service",
+  "version": "1.0.0",
+  "description": "Compile service for SwiftWasm's Try It Out feature",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swiftwasm/swiftwasm-compile-service.git"
+  },
+  "author": "Zhuowei Zhang",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/swiftwasm/swiftwasm-compile-service/issues"
+  },
+  "homepage": "https://github.com/swiftwasm/swiftwasm-compile-service#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
