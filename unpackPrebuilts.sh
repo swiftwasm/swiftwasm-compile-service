@@ -9,5 +9,7 @@ do
 done
 cd ..
 mv "compiler/wasi-sdk-"* "compiler/wasi-sdk"
+mv "compiler/wabt-"* "compiler/wabt"
 bash remove-swift-extra-files.sh || true
 bash remove-wasi-extra-files.sh || true
+bash remove-wabt-extra-files.sh || true
