@@ -8,7 +8,7 @@ Tested on Ubuntu 18.04. The compilers fetched by ./downloadPrebuilts.sh are comp
 ./downloadPrebuilts.sh
 ./unpackPrebuilts.sh
 npm install
-node index.js
+node local_server.js
 ```
 
 Then run

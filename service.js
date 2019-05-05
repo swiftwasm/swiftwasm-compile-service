@@ -13,8 +13,6 @@ const execFile = util.promisify(require('child_process').execFile);
 const app = express();
 app.use(bodyParser.json());
 
-const port = 3000;
-
 async function compileOneFile(appPath, folder, sourcePath) {
 	const objectPath = path.join(folder, "source.o");
 	const outputPath = path.join(folder, "program.wasm");
@@ -130,4 +128,4 @@ app.post("/v1/compile", (req, res, next) => {
 		});
 });
 
-app.listen(port);
+exports.app = app;
