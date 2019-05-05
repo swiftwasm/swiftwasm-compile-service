@@ -7,11 +7,13 @@ const os = require("os");
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const execFile = util.promisify(require('child_process').execFile);
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 function execArg(appPath, arg) {
 	if (exports.needsLibraryPath) {
