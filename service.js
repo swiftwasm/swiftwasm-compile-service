@@ -34,10 +34,11 @@ async function compileOneFile(appPath, folder, sourcePath) {
 			"-sdk", path.join(appPath, "compiler/wasi-sdk/opt/wasi-sdk/share/sysroot"),
 			"-o", objectPath,
 			"-O", "-c", sourcePath], execArg(appPath, {
-			"timeout": 2000,
+			"timeout": 4000,
 			}));
 		output = compileOutput.stderr;
 	} catch (e) {
+		console.log(e);
 		output = e.stderr;
 		return {success: false, output: output};
 	}
@@ -69,10 +70,11 @@ async function compileOneFile(appPath, folder, sourcePath) {
 			// sometimes threads hangs
 			"--no-threads"
 			], {
-			"timeout": 2000
+			"timeout": 4000
 			});
 		output += linkOutput.stderr;
 	} catch (e) {
+		console.log(e);
 		output += e.stderr;
 		return {success: false, output: output};
 	}
@@ -84,6 +86,7 @@ async function compileOneFile(appPath, folder, sourcePath) {
 			});
 		output += stripOutput.stderr;
 	} catch (e) {
+		console.log(e);
 		output += e.stderr;
 		return {success: false, output: output};
 	}
