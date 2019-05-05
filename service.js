@@ -13,6 +13,15 @@ const execFile = util.promisify(require('child_process').execFile);
 const app = express();
 app.use(bodyParser.json());
 
+function execArg(appPath, arg) {
+	if (exports.needsLibraryPath) {
+		const env = {...process.env};
+		env.LD_LIBRARY_PATH = path.join(appPath, "compiler/extralib");
+		arg.env = env;
+	}
+	return arg;
+}
+
 async function compileOneFile(appPath, folder, sourcePath) {
 	const objectPath = path.join(folder, "source.o");
 	const outputPath = path.join(folder, "program.wasm");
@@ -22,9 +31,9 @@ async function compileOneFile(appPath, folder, sourcePath) {
 			"-target", "wasm32-unknown-unknown-wasm",
 			"-sdk", path.join(appPath, "compiler/wasi-sdk/opt/wasi-sdk/share/sysroot"),
 			"-o", objectPath,
-			"-O", "-c", sourcePath], {
+			"-O", "-c", sourcePath], execArg(appPath, {
 			"timeout": 2000,
-			});
+			}));
 		output = compileOutput.stderr;
 	} catch (e) {
 		output = e.stderr;
