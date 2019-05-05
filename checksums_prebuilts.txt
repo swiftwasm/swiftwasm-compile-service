@@ -1,0 +1,4 @@
+f23a0fd47146c23baf3685c854f044f121ce1b97a8b39719b0353dff54c3420e  prebuilt/icu4c-wasi.tar.xz
+4387ef4f1b0b113b0f665b167dbb9f9afa39559b02ea38e4a13c7c319371ed45  prebuilt/swiftwasm.tar.gz
+88a1fa6a58297054459d8335cfa52946de952fe146a5769bcda0a71ced4c2b03  prebuilt/wabt-1.0.10-linux.tar.gz
+81fbd9916bfeb002c66e9a012d99d184ddf17083691a844be9189d29adf9c213  prebuilt/wasi-sdk-3.19gefb17cb478f9.m-linux.tar.gz
