@@ -17,6 +17,23 @@ Then run
 curl -d "{\"src\": \"print(1234)\"}" -H "Content-Type: application/json" http://localhost:3000/v1/compile
 ```
 
+# Deploying
+
+This service can be deployed as a Firebase Function.
+
+Instructions tested on macOS 10.14.4 with firebase-tools 6.8.0.
+
+```
+./downloadPrebuilts.sh
+./unpackPrebuilts.sh
+./copyFirebase.sh
+cd FirebaseFunction
+cd functions
+npm install
+cd ..
+firebase deploy
+```
+
 # License
 
 Apache 2.0.
