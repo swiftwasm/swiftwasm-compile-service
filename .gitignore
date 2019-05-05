@@ -2,3 +2,4 @@ compiler
 prebuilt
 node_modules
 .firebaserc
+glibc.modulemap

@@ -15,3 +15,5 @@ bash remove-wasi-extra-files.sh || true
 bash remove-wabt-extra-files.sh || true
 mkdir compiler/extralib
 cp libatomic.so.1 compiler/extralib/
+cp compiler/opt/swiftwasm-sdk/lib/swift/wasm/wasm32/glibc.modulemap ./
+bash generateModulemap.sh "$PWD/compiler/wasi-sdk/opt/wasi-sdk/share/sysroot" >compiler/opt/swiftwasm-sdk/lib/swift/wasm/wasm32/glibc.modulemap
