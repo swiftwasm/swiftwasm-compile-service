@@ -85,10 +85,29 @@ async function deleteDirectory(folder) {
 	await execFile("rm", ["-r", folder], {"timeout": 2000});
 }
 
+function makeResponse(responseObj, data) {
+	// format:
+	// magic:UInt32LE = 0xdec0ded0
+	// lengthJson:UInt32LE
+	// json string
+	// wasm begins here
+	const dataLength = data? data.length: 0;
+	const responseObjStr = JSON.stringify(responseObj);
+	const responseObjBuffer = Buffer.from(responseObjStr, "utf-8");
+	const outputBuffer = Buffer.allocUnsafe(4 + 4 + responseObjBuffer.length + dataLength);
+	outputBuffer.writeUInt32LE(0xdec0ded0, 0);
+	outputBuffer.writeUInt32LE(responseObjBuffer.length, 4);
+	responseObjBuffer.copy(outputBuffer, 8);
+	if (data) {
+		data.copy(outputBuffer, 8 + responseObjBuffer.length);
+	}
+	return outputBuffer;
+}
+
 async function handleCompile(req, res) {
 	const reqObj = req.body;
 	if (typeof(reqObj["src"]) != "string") {
-		res.status(400).send({"error": "Invalid request"});
+		res.status(400).send(makeResponse({"error": "Invalid request"}));
 		return;
 	}
 	const appPath = __dirname;
@@ -96,9 +115,12 @@ async function handleCompile(req, res) {
 	const sourcePath = path.join(folder, "source.swift");
 	await fsPromises.writeFile(sourcePath, reqObj["src"]);
 	const compileResult = await compileOneFile(appPath, folder, sourcePath);
-	// todo: grab the link result
+	let outputFileBuffer = null;
+	if (compileResult.success) {
+		outputFileBuffer = await fsPromises.readFile(path.join(folder, "program.wasm"));
+	}
 	await deleteDirectory(folder);
-	res.status(200).send(compileResult);
+	res.status(200).send(makeResponse(compileResult, outputFileBuffer));
 }
 
 app.post("/v1/compile", (req, res, next) => {
