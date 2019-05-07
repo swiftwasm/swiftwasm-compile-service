@@ -3,4 +3,6 @@ const service = require("./service");
 
 service.needsLibraryPath = true;
 
-exports.compile = functions.https.onRequest(service.app);
+exports.compile = functions
+	.runWith({memory: '2GB'})
+	.https.onRequest(service.app);
