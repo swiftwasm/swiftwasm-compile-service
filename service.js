@@ -38,7 +38,6 @@ async function compileOneFile(appPath, folder, sourcePath) {
 			}));
 		output = compileOutput.stderr;
 	} catch (e) {
-		console.log(e);
 		output = e.stderr;
 		return {success: false, output: output};
 	}
@@ -74,7 +73,6 @@ async function compileOneFile(appPath, folder, sourcePath) {
 			});
 		output += linkOutput.stderr;
 	} catch (e) {
-		console.log(e);
 		output += e.stderr;
 		return {success: false, output: output};
 	}
@@ -86,7 +84,6 @@ async function compileOneFile(appPath, folder, sourcePath) {
 			});
 		output += stripOutput.stderr;
 	} catch (e) {
-		console.log(e);
 		output += e.stderr;
 		return {success: false, output: output};
 	}
