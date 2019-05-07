@@ -4,12 +4,14 @@ const childProcess = require("child_process");
 const util = require("util");
 const path = require("path");
 const os = require("os");
+const zlib = require("zlib");
 
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const execFile = util.promisify(require('child_process').execFile);
+const gzip = util.promisify(zlib.gzip);
 
 const app = express();
 app.use(bodyParser.json());
@@ -97,7 +99,7 @@ async function deleteDirectory(folder) {
 	await execFile("rm", ["-r", folder], {"timeout": 2000});
 }
 
-function makeResponse(responseObj, data) {
+async function makeResponse(responseObj, data) {
 	// format:
 	// magic:UInt32LE = 0xdec0ded0
 	// lengthJson:UInt32LE
@@ -113,13 +115,13 @@ function makeResponse(responseObj, data) {
 	if (data) {
 		data.copy(outputBuffer, 8 + responseObjBuffer.length);
 	}
-	return outputBuffer;
+	return await gzip(outputBuffer);
 }
 
 async function handleCompile(req, res) {
 	const reqObj = req.body;
 	if (typeof(reqObj["src"]) != "string") {
-		res.status(400).send(makeResponse({"error": "Invalid request"}));
+		res.status(400).send("Invalid request");
 		return;
 	}
 	const appPath = __dirname;
@@ -132,7 +134,8 @@ async function handleCompile(req, res) {
 		outputFileBuffer = await fsPromises.readFile(path.join(folder, "program.wasm"));
 	}
 	await deleteDirectory(folder);
-	res.status(200).send(makeResponse(compileResult, outputFileBuffer));
+	const responseData = await makeResponse(compileResult, outputFileBuffer);
+	res.status(200).send(responseData);
 }
 
 app.post("/v1/compile", (req, res, next) => {
