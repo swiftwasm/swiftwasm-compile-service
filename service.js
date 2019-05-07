@@ -116,7 +116,7 @@ function makeResponse(responseObj, data) {
 async function handleCompile(req, res) {
 	const reqObj = req.body;
 	if (typeof(reqObj["src"]) != "string") {
-		res.status(400).send(makeResponse({"error": "Invalid request"}));
+		res.status(400).type("text/plain").send(makeResponse({"error": "Invalid request"}));
 		return;
 	}
 	const appPath = __dirname;
@@ -129,7 +129,7 @@ async function handleCompile(req, res) {
 		outputFileBuffer = await fsPromises.readFile(path.join(folder, "program.wasm"));
 	}
 	await deleteDirectory(folder);
-	res.status(200).send(makeResponse(compileResult, outputFileBuffer));
+	res.status(200).type("text/plain").send(makeResponse(compileResult, outputFileBuffer));
 }
 
 app.post("/v1/compile", (req, res, next) => {
