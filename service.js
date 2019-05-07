@@ -80,7 +80,7 @@ async function compileOneFile(appPath, folder, sourcePath) {
 	}
 	try {
 		const stripOutput = await execFile(path.join(appPath, "compiler/wabt/wasm-strip"), [
-			objectPath
+			outputPath
 			], {
 			"timeout": 2000
 			});
