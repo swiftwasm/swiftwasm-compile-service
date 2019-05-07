@@ -115,10 +115,11 @@ async function makeResponse(responseObj, data) {
 	if (data) {
 		data.copy(outputBuffer, 8 + responseObjBuffer.length);
 	}
-	return await gzip(outputBuffer);
+	return await gzip(outputBuffer, {level: 9});
 }
 
 async function handleCompile(req, res) {
+	const startTime = Date.now();
 	const reqObj = req.body;
 	if (typeof(reqObj["src"]) != "string") {
 		res.status(400).send("Invalid request");
@@ -128,13 +129,16 @@ async function handleCompile(req, res) {
 	const folder = await fsPromises.mkdtemp(path.join(os.tmpdir(), 'swiftwasm-'));
 	const sourcePath = path.join(folder, "source.swift");
 	await fsPromises.writeFile(sourcePath, reqObj["src"]);
+console.log("Compile: " + (Date.now() - startTime));
 	const compileResult = await compileOneFile(appPath, folder, sourcePath);
 	let outputFileBuffer = null;
 	if (compileResult.success) {
 		outputFileBuffer = await fsPromises.readFile(path.join(folder, "program.wasm"));
 	}
 	await deleteDirectory(folder);
+console.log("Respond: " + (Date.now() - startTime));
 	const responseData = await makeResponse(compileResult, outputFileBuffer);
+console.log("Send: " + (Date.now() - startTime));
 	res.status(200).send(responseData);
 }
 
