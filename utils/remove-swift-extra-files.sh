@@ -1,5 +1,6 @@
 #!/bin/sh
-basepath="compiler/opt/swiftwasm-sdk"
+source="$(cd "$(dirname $0)/.." && pwd)"
+basepath="$source/prebuilt/swift/usr"
 filestoremove="bin/sil-* 
 bin/lldb*
 bin/sourcekitd-*
@@ -12,6 +13,8 @@ bin/swift-llvm-opt
 bin/swift-refactor
 bin/swift-reflection-dump
 bin/swift-*-test
+bin/llvm*
+bin/llc
 lib/libsourcekitdInProc.so
 lib/swift/clang/lib/linux/*
 lib/swift_static/linux/*
@@ -20,5 +23,5 @@ lib/swift/linux/*"
 for i in $filestoremove
 do
 	echo $basepath/$i
-	rm $basepath/$i
+	rm -f $basepath/$i
 done
