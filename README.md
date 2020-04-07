@@ -1,13 +1,10 @@
 Compile microservice for the Try It Now feature on https://swiftwasm.org.
 
-# Running
-
-Tested on Ubuntu 18.04. The compilers fetched by ./downloadPrebuilts.sh are compiled for Ubuntu 16.04 and above.
+## Running
 
 ```
-./downloadPrebuilts.sh
-./unpackPrebuilts.sh
 npm install
+make prebuilt/wabt prebuilt/swift
 node local_server.js
 ```
 
@@ -17,18 +14,20 @@ Then run
 curl -d "{\"src\": \"print(1234)\"}" -H "Content-Type: application/json" http://localhost:3000/v1/compile
 ```
 
-# Deploying
+## Deploying
 
 This service can be deployed as a Firebase Function.
 
-Instructions tested on macOS 10.14.4 with firebase-tools 6.8.0.
+Instructions tested on macOS 10.15.3 with firebase-tools 8.0.2.
+
+```sh
+$ brew install rpm2cpio
+$ npm install firebase-tools -g
+```
 
 ```
-./downloadPrebuilts.sh
-./unpackPrebuilts.sh
-./copyFirebase.sh
-cd FirebaseFunction
-cd functions
+make deploy
+cd FirebaseFunction/functions
 npm install
 cd ..
 firebase deploy
