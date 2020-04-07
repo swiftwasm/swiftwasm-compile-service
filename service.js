@@ -31,6 +31,7 @@ async function compileOneFile(appPath, folder, sourcePath) {
 		const compileOutput = await execFile(path.join(appPath, "prebuilt/swift/usr/bin/swiftc"), [
 			"-target", "wasm32-unknown-unknown-wasi",
 			"-sdk", sysRoot,
+			"-Xlinker", "--allow-undefined",
 			"-o", outputPath,
 			"-O", sourcePath], execArg(appPath, {
 				"timeout": 4000,
