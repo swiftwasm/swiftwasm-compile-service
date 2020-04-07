@@ -28,7 +28,7 @@ endif
 prebuilt/libatomic.so.1:
 	./utils/download-libatomic.sh $(LIBATOMIC_DOWNLOAD_URL)
 
-FirebaseFunction/functions/compiler: prebuilt/linux/swift prebuilt/wabt
+FirebaseFunction/functions/prebuilt: prebuilt/linux/swift prebuilt/wabt
 	mkdir -p $@
 	cp -af $^ $@
 FirebaseFunction/functions/service.js: service.js
@@ -38,4 +38,4 @@ FirebaseFunction/functions/extralib: prebuilt/libatomic.so.1
 	cp prebuilt/libatomic.so.1 $@/libatomic.so.1
 
 .PHONY: deploy
-deploy: FirebaseFunction/functions/service.js FirebaseFunction/functions/compiler FirebaseFunction/functions/extralib
+deploy: FirebaseFunction/functions/service.js FirebaseFunction/functions/prebuilt FirebaseFunction/functions/extralib

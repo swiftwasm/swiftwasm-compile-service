@@ -1,6 +1,5 @@
 const fs = require("fs");
 const fsPromises = fs.promises;
-const childProcess = require("child_process");
 const util = require("util");
 const path = require("path");
 const os = require("os");
@@ -17,7 +16,7 @@ app.use(cors());
 
 function execArg(appPath, arg) {
 	if (exports.needsLibraryPath) {
-		const env = {...process.env};
+		const env = { ...process.env };
 		env.LD_LIBRARY_PATH = path.join(appPath, "extralib");
 		arg.env = env;
 	}
@@ -26,37 +25,37 @@ function execArg(appPath, arg) {
 
 async function compileOneFile(appPath, folder, sourcePath) {
 	const outputPath = path.join(folder, "program.wasm");
-	const sysRoot = path.join(appPath, "compiler/swift/usr/share/wasi-sysroot");
+	const sysRoot = path.join(appPath, "prebuilt/swift/usr/share/wasi-sysroot");
 	var output = "";
 	try {
-		const compileOutput = await execFile(path.join(appPath, "compiler/swift/usr/bin/swiftc"), [
+		const compileOutput = await execFile(path.join(appPath, "prebuilt/swift/usr/bin/swiftc"), [
 			"-target", "wasm32-unknown-unknown-wasi",
 			"-sdk", sysRoot,
 			"-o", outputPath,
 			"-O", sourcePath], execArg(appPath, {
-			"timeout": 4000,
+				"timeout": 4000,
 			}));
 		output = compileOutput.stderr;
 	} catch (e) {
 		output = e.stderr;
-		return {success: false, output: output};
+		return { success: false, output: output };
 	}
 	try {
-		const stripOutput = await execFile(path.join(appPath, "compiler/wabt/wasm-strip"), [
+		const stripOutput = await execFile(path.join(appPath, "prebuilt/wabt/wasm-strip"), [
 			outputPath
-			], {
+		], {
 			"timeout": 2000
-			});
+		});
 		output += stripOutput.stderr;
 	} catch (e) {
 		output += e.stderr;
-		return {success: false, output: output};
+		return { success: false, output: output };
 	}
-	return {success: true, output: output};
+	return { success: true, output: output };
 }
 
 async function deleteDirectory(folder) {
-	await execFile("rm", ["-r", folder], {"timeout": 2000});
+	await execFile("rm", ["-r", folder], { "timeout": 2000 });
 }
 
 function makeResponse(responseObj, data) {
@@ -65,7 +64,7 @@ function makeResponse(responseObj, data) {
 	// lengthJson:UInt32LE
 	// json string
 	// wasm begins here
-	const dataLength = data? data.length: 0;
+	const dataLength = data ? data.length : 0;
 	const responseObjStr = JSON.stringify(responseObj);
 	const responseObjBuffer = Buffer.from(responseObjStr, "utf-8");
 	const outputBuffer = Buffer.allocUnsafe(4 + 4 + responseObjBuffer.length + dataLength);
@@ -80,8 +79,8 @@ function makeResponse(responseObj, data) {
 
 async function handleCompile(req, res) {
 	const reqObj = req.body;
-	if (typeof(reqObj["src"]) != "string") {
-		res.status(400).type("text/plain").send(makeResponse({"error": "Invalid request"}));
+	if (typeof (reqObj["src"]) != "string") {
+		res.status(400).type("text/plain").send(makeResponse({ "error": "Invalid request" }));
 		return;
 	}
 	const appPath = __dirname;
