@@ -1,6 +1,6 @@
 #!/bin/sh
 source="$(cd "$(dirname $0)/.." && pwd)"
-basepath="$source/prebuilt/swift/usr"
+basepath="$source/prebuilt/linux/swift/usr"
 filestoremove="bin/sil-* 
 bin/lldb*
 bin/sourcekitd-*
@@ -23,5 +23,5 @@ lib/swift/linux/*"
 for i in $filestoremove
 do
 	echo $basepath/$i
-	rm -f $basepath/$i
+	rm -rf $basepath/$i
 done
