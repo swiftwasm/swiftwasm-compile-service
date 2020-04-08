@@ -17,7 +17,6 @@ prebuilt/wabt:
 prebuilt/swift:
 	mkdir -p $@ && cd $@ && \
 		curl -L $(SWIFT_TOOLCHAIN_DOWNLOAD_URL) | tar xz --strip-components 1
-	./utils/remove-swift-extra-files.sh
 prebuilt/linux/swift: prebuilt/swift
 ifeq ($(shell uname),Linux)
 	cp -a prebuilt/swift prebuilt/linux/swift
