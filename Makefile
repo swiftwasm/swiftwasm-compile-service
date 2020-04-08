@@ -8,6 +8,7 @@ SWIFT_TOOLCHAIN_DOWNLOAD_URL=$(SWIFT_LINUX_TOOLCHAIN_DOWNLOAD_URL)
 endif
 
 LIBATOMIC_DOWNLOAD_URL="http://ftp.altlinux.org/pub/distributions/ALTLinux/Sisyphus/x86_64/RPMS.classic/libatomic1-9.2.1-alt3.x86_64.rpm"
+LIBSTDCXX_DOWNLOAD_URL="http://ftp.altlinux.org/pub/distributions/ALTLinux/Sisyphus/x86_64/RPMS.classic/libstdc%2B%2B6-9.2.1-alt3.x86_64.rpm"
 
 prebuilt/wabt:
 	mkdir -p $@ && cd $@ && \
@@ -27,15 +28,18 @@ else
 endif
 prebuilt/libatomic.so.1:
 	./utils/download-libatomic.sh $(LIBATOMIC_DOWNLOAD_URL)
+prebuilt/libstdc++.so.6:
+	./utils/download-libstdc++.sh $(LIBSTDCXX_DOWNLOAD_URL)
 
 FirebaseFunction/functions/prebuilt: prebuilt/linux/swift prebuilt/wabt
 	mkdir -p $@
 	cp -af $^ $@
 FirebaseFunction/functions/service.js: service.js
 	cp $< $@
-FirebaseFunction/functions/extralib: prebuilt/libatomic.so.1
+FirebaseFunction/functions/extralib: prebuilt/libatomic.so.1 prebuilt/libstdc++.so.6
 	mkdir -p $@
 	cp prebuilt/libatomic.so.1 $@/libatomic.so.1
+	cp prebuilt/libstdc++.so.6 $@/libstdc++.so.6
 
 .PHONY: deploy
 deploy: FirebaseFunction/functions/service.js FirebaseFunction/functions/prebuilt FirebaseFunction/functions/extralib
