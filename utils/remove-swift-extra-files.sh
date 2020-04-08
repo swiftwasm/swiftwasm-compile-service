@@ -1,6 +1,6 @@
 #!/bin/sh
 source="$(cd "$(dirname $0)/.." && pwd)"
-basepath="$source/prebuilt/linux/swift/usr"
+basepath="$1"
 filestoremove="bin/sil-* 
 bin/lldb*
 bin/*lld*
@@ -11,6 +11,7 @@ bin/clang-10
 bin/clang-cl
 bin/sourcekitd-*
 bin/swift-build
+bin/swift-package
 bin/swift-run
 bin/swift-test
 bin/swift-api-digester
@@ -27,9 +28,17 @@ bin/swift-symbolgraph-extract
 bin/swift-*-test
 bin/llvm*
 bin/llc
+bin/objdump
+bin/strip
+bin/objcopy
+bin/nm
+bin/size
 lib/libsourcekitdInProc.so
 lib/swift_static/linux/*
-lib/swift"
+lib/swift/clang/lib
+lib/swift/pm
+lib/swift/FrameworkABIBaseline
+lib/swift/linux"
 for i in $filestoremove
 do
 	echo $basepath/$i

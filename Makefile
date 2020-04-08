@@ -23,7 +23,7 @@ ifeq ($(shell uname),Linux)
 else
 	mkdir -p $@ && cd $@ && \
 		curl -L $(SWIFT_LINUX_TOOLCHAIN_DOWNLOAD_URL) | tar xz --strip-components 1
-	./utils/remove-swift-extra-files.sh
+	./utils/remove-swift-extra-files.sh ./prebuilt/linux/swift
 endif
 prebuilt/libatomic.so.1:
 	./utils/download-libatomic.sh $(LIBATOMIC_DOWNLOAD_URL)
