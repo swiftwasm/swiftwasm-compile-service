@@ -1,5 +1,4 @@
 #!/bin/sh
-source="$(cd "$(dirname $0)/.." && pwd)"
 basepath="$1"
 filestoremove="bin/sil-* 
 bin/lldb*
@@ -16,7 +15,6 @@ bin/swift-run
 bin/swift-test
 bin/swift-api-digester
 bin/swift-ast-script
-bin/swift-autolink-extract
 bin/swift-demangle
 bin/swift-demangle-yamldump
 bin/swift-format
