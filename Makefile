@@ -1,7 +1,7 @@
-SWIFT_LINUX_TOOLCHAIN_DOWNLOAD_URL="https://github.com/swiftwasm/swift/releases/download/swift-wasm-DEVELOPMENT-SNAPSHOT-2020-04-06-a/swift-wasm-DEVELOPMENT-SNAPSHOT-2020-04-06-a-linux.tar.gz"
+SWIFT_LINUX_TOOLCHAIN_DOWNLOAD_URL="https://github.com/swiftwasm/swift/releases/download/swift-wasm-DEVELOPMENT-SNAPSHOT-2020-04-07-a/swift-wasm-DEVELOPMENT-SNAPSHOT-2020-04-07-a-linux.tar.gz"
 ifeq  ($(shell uname),Darwin)
 WABT_DOWNLOAD_URL="https://github.com/WebAssembly/wabt/releases/download/1.0.12/wabt-1.0.12-osx.tar.gz"
-SWIFT_TOOLCHAIN_DOWNLOAD_URL="https://github.com/swiftwasm/swift/releases/download/swift-wasm-DEVELOPMENT-SNAPSHOT-2020-04-06-a/swift-wasm-DEVELOPMENT-SNAPSHOT-2020-04-06-a-osx.tar.gz"
+SWIFT_TOOLCHAIN_DOWNLOAD_URL="https://github.com/swiftwasm/swift/releases/download/swift-wasm-DEVELOPMENT-SNAPSHOT-2020-04-07-a/swift-wasm-DEVELOPMENT-SNAPSHOT-2020-04-07-a-osx.tar.gz"
 else ifeq ($(shell uname),Linux)
 WABT_DOWNLOAD_URL="https://github.com/WebAssembly/wabt/releases/download/1.0.12/wabt-1.0.12-linux.tar.gz"
 SWIFT_TOOLCHAIN_DOWNLOAD_URL=$(SWIFT_LINUX_TOOLCHAIN_DOWNLOAD_URL)
